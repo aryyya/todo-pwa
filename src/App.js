@@ -10,12 +10,12 @@ class App extends Component {
     todoItem: ''
   }
 
-  componentDidMount() {
+  componentDidMount () {
     fetch('http://localhost:4567/items.json')
-    .then(response => response.json())
-    .then(items => {
-      this.setState({ items, loading: false })
-    })
+      .then(response => response.json())
+      .then(items => {
+        this.setState({ items, loading: false })
+      })
   }
 
   addItem = (e) => {
@@ -24,14 +24,14 @@ class App extends Component {
     fetch('http://localhost:4567/items.json', {
       method: 'POST',
       body: JSON.stringify({ item: this.state.todoItem }),
-      headers:{
+      headers: {
         'Content-Type': 'application/json'
       }
     })
-    .then(response => response.json())
-    .then(items => {
-      this.setState({ items })
-    })
+      .then(response => response.json())
+      .then(items => {
+        this.setState({ items })
+      })
 
     this.setState({ todoItem: '' })
   }
@@ -44,13 +44,13 @@ class App extends Component {
         'Content-Type': 'application/json'
       }
     })
-    .then(response => response.json())
-    .then(items => {
-      this.setState({ items })
-    })
+      .then(response => response.json())
+      .then(items => {
+        this.setState({ items })
+      })
   }
 
-  render() {
+  render () {
     return (
       <div className="App">
         <nav className="navbar navbar-light bg-light">

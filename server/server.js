@@ -40,7 +40,7 @@ app.post('/items.json', (req, res) => {
 
 app.delete('/items.json', (req, res) => {
   items = items.filter(item => {
-    if(item.id !== req.body.id) {
+    if (item.id !== req.body.id) {
       return item
     }
   })
