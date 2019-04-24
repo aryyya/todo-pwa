@@ -15,6 +15,26 @@ workbox.routing.registerRoute(
   })
 )
 
+self.addEventListener('fetch', event => {
+  const { method } = event.request
+  if (method === 'POST' || method === 'DELETE') {
+    event.respondWith(
+      fetch(event.request).catch(err => {
+        return new Response(
+          JSON.stringify({
+            error: 'This action is disabled while the app is offline.'
+          }),
+          {
+            headers: {
+              'Content-Type': 'application/json'
+            } 
+          }
+        )
+      })
+    )
+  }
+})
+
 self.addEventListener('install', event => {
   console.log('install event fired')
 
