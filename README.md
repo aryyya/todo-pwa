@@ -1,3 +1,3 @@
-## todo-pwa
+# todo-pwa
 
-A Progresive Web App created with create-react-app
+A React based progressive web application.
