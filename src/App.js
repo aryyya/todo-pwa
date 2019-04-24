@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import ConnectionBadge from './connection-badge'
 
 class App extends Component {
 
@@ -71,12 +72,7 @@ class App extends Component {
             <img src={logo} className="App-logo" alt="logo" />
             My Todo List
           </span>
-          {
-            this.state.offline &&
-            <span className="badge badge-danger my-3">
-              Offline
-            </span>
-          }
+          <ConnectionBadge isOnline={!this.state.offline} />
         </nav>
 
         <div className="px-3 py-2">
