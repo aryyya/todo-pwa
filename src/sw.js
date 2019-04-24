@@ -1,4 +1,4 @@
-console.log('Hello, world! From sw.js.')
-
 workbox.skipWaiting()
 workbox.clientsClaim()
+
+workbox.precaching.precacheAndRoute(self.__precacheManifest || [])
