@@ -161,7 +161,7 @@ const Profile = () => {
 
   const [image, setImage] = useState(null)
   const [supportsCamera] = useState('mediaDevices' in navigator)
-  const [enableCamera, setEnableCamera] = useState()
+  const [enableCamera, setEnableCamera] = useState(false)
 
   const changeImage = event => {
     setImage(URL.createObjectURL(event.target.files[0]))
@@ -181,26 +181,52 @@ const Profile = () => {
         </span>
       </nav>
       <div style={{ textAlign: 'center' }}>
-        <img
-          src={image || GreyProfile}
-          alt="profile"
-          style={{ height: 200, marginTop: 50 }}
-        />
+        {
+          !enableCamera &&
+          <img
+            src={image || GreyProfile}
+            alt="profile"
+            style={{ height: 200, marginTop: 50 }}
+          />
+        }
+        {
+          enableCamera &&
+          <div>
+            {/* <video controls={false} autoPlay /> */}
+            <video
+              ref={c => {
+                const _video = c
+                if (_video) {
+                  navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(stream => _video.srcObject = stream)
+                }
+              }}
+              controls={false}
+              autoPlay
+              style={{ width: '100%', maxWidth: 300 }}
+            />
+          </div>
+        }
         <p style={{ color: '#888', fontSize: 20 }}>username</p>
         <div>
           {
             supportsCamera &&
-            <button onClick={startChangeImage}>
-              Toggle Camera
-            </button>
-
-            // <input
-            //   type="file"
-            //   accept="image/*"
-            //   onChange={changeImage}
-            //   capture="user"
-            // />
+            <div>
+              <button className="btn btn-primary"
+                onClick={startChangeImage}
+              >
+                Toggle Camera
+              </button>
+            </div>
           }
+          <div>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={changeImage}
+              capture="user"
+            />
+          </div>
         </div>
       </div>
     </div>
