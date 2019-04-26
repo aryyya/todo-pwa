@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import logo from './logo.svg'
 import './App.css'
@@ -158,6 +158,19 @@ class List extends Component {
 }
 
 const Profile = () => {
+
+  const [image, setImage] = useState(null)
+  const [supportsCamera] = useState('mediaDevices' in navigator)
+  const [enableCamera, setEnableCamera] = useState()
+
+  const changeImage = event => {
+    setImage(URL.createObjectURL(event.target.files[0]))
+  }
+
+  const startChangeImage = () => {
+    setEnableCamera(!enableCamera)
+  }
+
   return (
     <div>
       <nav className="navbar navbar-light bg-light">
@@ -169,11 +182,26 @@ const Profile = () => {
       </nav>
       <div style={{ textAlign: 'center' }}>
         <img
-          src={GreyProfile}
+          src={image || GreyProfile}
           alt="profile"
           style={{ height: 200, marginTop: 50 }}
         />
         <p style={{ color: '#888', fontSize: 20 }}>username</p>
+        <div>
+          {
+            supportsCamera &&
+            <button onClick={startChangeImage}>
+              Toggle Camera
+            </button>
+
+            // <input
+            //   type="file"
+            //   accept="image/*"
+            //   onChange={changeImage}
+            //   capture="user"
+            // />
+          }
+        </div>
       </div>
     </div>
   )
