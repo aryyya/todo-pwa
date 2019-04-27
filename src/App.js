@@ -280,11 +280,13 @@ const Profile = () => {
           <div>
             <br />
             <input
+              className="form-control"
               type="file"
               accept="image/*"
               onChange={changeImage}
               capture="user" />
           </div>
+          <br />
         </div>
         <div>
           <button
@@ -292,6 +294,8 @@ const Profile = () => {
             onClick={subscribe}>
             Subscribe to Notifications
           </button>
+          <br />
+          <br />
         </div>
         <div>
           <button
