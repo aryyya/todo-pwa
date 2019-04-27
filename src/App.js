@@ -6,6 +6,21 @@ import ConnectionBadge from './connection-badge'
 import GreyProfile from './grey_profile.png'
 import Back from './back.png'
 
+const urlB64ToUint8Array = base64String => {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding)
+    .replace(/\-/g, '+')
+    .replace(/_/g, '/');
+
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
 const ITEMS_URL = 'http://localhost:4567/items.json'
 
 class List extends Component {
@@ -192,6 +207,26 @@ const Profile = () => {
     setEnableCamera(false)
   }
 
+  const subscribe = () => {
+    const publicKey = 'BPNohkps_Jc81Ccs0kEs5mx619N4FA6Y6UGRwSzS3x2gJLtOFFuCZpRWoeg_KeoEKEi6FDYCf4wkej-_9rh-lgY'
+    global.registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlB64ToUint8Array(publicKey)
+    })
+      .then(sub => {
+        console.log('Subscribed!')
+      })
+      .catch(err => {
+        console.log('Not subscribed.')
+      })
+  }
+
+  const testPushMessage = () => {
+    global.registration.showNotification('Hello, world!', {
+      body: 'Is there anybody out there?'
+    })
+  }
+
   return (
     <div>
       <nav className="navbar navbar-light bg-light">
@@ -207,8 +242,7 @@ const Profile = () => {
           <img
             src={image || GreyProfile}
             alt="profile"
-            style={{ height: 200, marginTop: 50 }}
-          />
+            style={{ height: 200, marginTop: 50 }} />
         }
         {
           enableCamera &&
@@ -223,12 +257,10 @@ const Profile = () => {
               }}
               controls={false}
               autoPlay
-              style={{ width: '100%', maxWidth: 300 }}
-            />
+              style={{ width: '100%', maxWidth: 300 }} />
             <button
               className="btn btn-warning"
-              onClick={takeImage}
-            >
+              onClick={takeImage}>
               Take Image
             </button>
             <canvas ref={c => _canvas = c} style={{ display: 'none' }}></canvas>
@@ -240,8 +272,7 @@ const Profile = () => {
             supportsCamera &&
             <div>
               <button className="btn btn-primary"
-                onClick={startChangeImage}
-              >
+                onClick={startChangeImage}>
                 Toggle Camera
               </button>
             </div>
@@ -252,9 +283,22 @@ const Profile = () => {
               type="file"
               accept="image/*"
               onChange={changeImage}
-              capture="user"
-            />
+              capture="user" />
           </div>
+        </div>
+        <div>
+          <button
+            className="btn btn-danger"
+            onClick={subscribe}>
+            Subscribe to Notifications
+          </button>
+        </div>
+        <div>
+          <button
+            className="btn btn-warning"
+            onClick={testPushMessage}>
+            Test Push Message
+          </button>
         </div>
       </div>
     </div>
