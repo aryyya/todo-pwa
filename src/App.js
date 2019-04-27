@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { Component, useState, useRef } from 'react'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import logo from './logo.svg'
 import './App.css'
@@ -163,12 +163,33 @@ const Profile = () => {
   const [supportsCamera] = useState('mediaDevices' in navigator)
   const [enableCamera, setEnableCamera] = useState(false)
 
+  let _video = useRef(null)
+  let _canvas = useRef(null)
+
   const changeImage = event => {
     setImage(URL.createObjectURL(event.target.files[0]))
   }
 
   const startChangeImage = () => {
     setEnableCamera(!enableCamera)
+  }
+
+  const takeImage = () => {
+    _canvas.width = _video.videoWidth
+    _canvas.height = _video.videoHeight
+
+    _canvas.getContext('2d').drawImage(
+      _video,
+      0,
+      0,
+      _video.videoWidth,
+      _video.videoHeight
+    )
+
+    _video.srcObject.getVideoTracks().forEach(videoTrack => videoTrack.stop())
+
+    setImage(_canvas.toDataURL())
+    setEnableCamera(false)
   }
 
   return (
@@ -192,10 +213,9 @@ const Profile = () => {
         {
           enableCamera &&
           <div>
-            {/* <video controls={false} autoPlay /> */}
             <video
               ref={c => {
-                const _video = c
+                _video = c
                 if (_video) {
                   navigator.mediaDevices.getUserMedia({ video: true })
                     .then(stream => _video.srcObject = stream)
@@ -205,6 +225,13 @@ const Profile = () => {
               autoPlay
               style={{ width: '100%', maxWidth: 300 }}
             />
+            <button
+              className="btn btn-warning"
+              onClick={takeImage}
+            >
+              Take Image
+            </button>
+            <canvas ref={c => _canvas = c} style={{ display: 'none' }}></canvas>
           </div>
         }
         <p style={{ color: '#888', fontSize: 20 }}>username</p>
@@ -220,6 +247,7 @@ const Profile = () => {
             </div>
           }
           <div>
+            <br />
             <input
               type="file"
               accept="image/*"
